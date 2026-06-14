@@ -91,3 +91,8 @@ func (c *Config) DSN() string {
 		c.DBPort,
 	)
 }
+
+// int port to ":{port}"
+func (c *Config) PortAddr() string {
+	return fmt.Sprintf(":%s", c.AppPort)
+}
