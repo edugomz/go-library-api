@@ -1,0 +1,42 @@
+# =========================
+# 1. Build stage
+# =========================
+FROM golang:1.26-alpine AS builder
+
+WORKDIR /app
+
+# Install CA certs (needed for HTTPS calls if any)
+RUN apk add --no-cache ca-certificates
+
+# Copy go mod files first (better caching)
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build binary (static, production-ready)
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server ./cmd/api
+
+# =========================
+# 2. Runtime stage
+# =========================
+FROM alpine:3.20
+
+WORKDIR /app
+
+# CA certificates for HTTPS
+RUN apk add --no-cache ca-certificates
+
+# Copy binary from builder
+COPY --from=builder /app/server .
+
+# Copy .env if you want local container config (optional)
+# COPY .env .
+
+# Expose port
+EXPOSE 8080
+
+# Run app
+CMD ["./server"]
