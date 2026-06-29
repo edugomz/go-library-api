@@ -5,16 +5,21 @@ import (
 	"errors"
 
 	"library-api/internal/models"
-	"library-api/internal/repository"
 )
 
 var ErrInvalidAuthor = errors.New("invalid author")
 
-type AuthorService struct {
-	repo *repository.AuthorRepository
+type AuthorRepository interface {
+	GetAll() ([]models.Author, error)
+	GetByID(id uint) (*models.Author, error)
+	Create(author *models.Author) error
 }
 
-func NewAuthorService(repo *repository.AuthorRepository) *AuthorService {
+type AuthorService struct {
+	repo AuthorRepository
+}
+
+func NewAuthorService(repo AuthorRepository) *AuthorService {
 	return &AuthorService{
 		repo: repo,
 	}

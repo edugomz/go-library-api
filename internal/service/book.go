@@ -3,14 +3,19 @@ package service
 import (
 	"errors"
 	"library-api/internal/models"
-	"library-api/internal/repository"
 )
 
-type BookService struct {
-	repo *repository.BookRepository
+type BookRepository interface {
+	GetAll() ([]models.Book, error)
+	GetByID(id uint) (*models.Book, error)
+	Create(book *models.Book) error
 }
 
-func NewBookService(repo *repository.BookRepository) *BookService {
+type BookService struct {
+	repo BookRepository
+}
+
+func NewBookService(repo BookRepository) *BookService {
 	return &BookService{
 		repo: repo,
 	}
