@@ -25,3 +25,9 @@ func (r *UserRepository) GetAll() ([]models.User, error) {
 	err := r.db.Find(&users).Error
 	return users, err
 }
+
+func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
+	var user models.User
+	err := r.db.Where("email = ?", email).First(&user).Error
+	return &user, err
+}

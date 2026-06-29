@@ -27,7 +27,7 @@ func NewApplication() *Application {
 		logger.Log.Error("failed to connect to db", "error", err)
 	}
 
-	handlers := NewHandlers(db.DB)
+	handlers := NewHandlers(db.DB, cfg.JWTSecret)
 
 	r := gin.Default()
 	r.LoadHTMLGlob("internal/views/*")
@@ -36,7 +36,7 @@ func NewApplication() *Application {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
-	registerAPIroutes(r, handlers)
+	registerAPIroutes(r, handlers, handlers.AuthService)
 	registerWebRoutes(r, handlers)
 
 	return &Application{

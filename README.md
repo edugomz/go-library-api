@@ -42,6 +42,7 @@ The goal is to simulate how production Go services are structured without introd
 * Book reviews system
 * Reading lists per user
 * Relational integrity via foreign keys
+* JWT authentication (register, login, Bearer token validation)
 * Structured application bootstrap
 * Environment-based configuration
 * Container-ready deployment (Docker)
@@ -86,7 +87,7 @@ Relationships are fully normalized and enforced at the database level using fore
 ## 🚀 Roadmap
 
 * [ ] Replace AutoMigrate with versioned migrations
-* [ ] Add authentication (JWT-based)
+* [x] Add authentication (JWT-based)
 * [ ] Introduce caching layer (Redis)
 * [ ] Add integration + unit test suite
 * [ ] Add API pagination and filtering

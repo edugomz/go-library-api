@@ -17,7 +17,8 @@ type Config struct {
 	DBPass string
 	DBName string
 
-	LogLevel string
+	LogLevel  string
+	JWTSecret string
 }
 
 func Load() (*Config, error) {
@@ -35,7 +36,8 @@ func Load() (*Config, error) {
 		DBPass: getEnv("DB_PASSWORD", ""),
 		DBName: getEnv("DB_NAME", ""),
 
-		LogLevel: getEnv("LOG_LEVEL", "info"),
+		LogLevel:  getEnv("LOG_LEVEL", "info"),
+		JWTSecret: getEnv("JWT_SECRET", ""),
 	}
 
 	if err := cfg.Validate(); err != nil {
@@ -57,6 +59,10 @@ func (c *Config) Validate() error {
 
 	if c.DBName == "" {
 		return errors.New("DB_NAME is required")
+	}
+
+	if c.JWTSecret == "" {
+		return errors.New("JWT_SECRET is required")
 	}
 
 	switch c.LogLevel {

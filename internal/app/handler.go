@@ -10,19 +10,24 @@ import (
 )
 
 type Handlers struct {
-	User *api.UserHandler
-	Book *api.BookHandler
-	Author *api.AuthorHandler
+	Auth        *api.AuthHandler
+	AuthService *service.AuthService
+	User        *api.UserHandler
+	Book        *api.BookHandler
+	Author      *api.AuthorHandler
 
 	Web *web.WebHandler
 }
 
-func NewHandlers(db *gorm.DB) *Handlers {
+func NewHandlers(db *gorm.DB, jwtSecret string) *Handlers {
+	userRepo := repository.NewUserRepository(db)
+	authService := service.NewAuthService(userRepo, jwtSecret)
+
 	return &Handlers{
+		Auth:        api.NewAuthHandler(authService),
+		AuthService: authService,
 		User: api.NewUserHandler(
-			service.NewUserService(
-				repository.NewUserRepository(db),
-			),
+			service.NewUserService(userRepo),
 		),
 		Book: api.NewBookHandler(
 			service.NewBookService(

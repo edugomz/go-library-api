@@ -1,22 +1,37 @@
 package app
 
-import "github.com/gin-gonic/gin"
+import (
+	"library-api/internal/middleware"
+	"library-api/internal/service"
 
-func registerAPIroutes(r *gin.Engine, h *Handlers) {
+	"github.com/gin-gonic/gin"
+)
+
+func registerAPIroutes(r *gin.Engine, h *Handlers, authService *service.AuthService) {
 	g := r.Group("/api/v1")
+
+	// auth — public
+	auth := g.Group("/auth")
 	{
-		g.POST("/users", h.User.CreateUser)
-		g.GET("/users", h.User.GetUsers)
-
-		g.GET("/books", h.Book.GetBooks)
-		g.GET("/books/:id", h.Book.GetBook)
-		g.POST("/books", h.Book.CreateBook)
-
-		g.GET("/authors", h.Author.GetAuthors)
-		g.GET("/authors/:id", h.Author.GetAuthor)
-		g.POST("/authors", h.Author.CreateAuthor)
+		auth.POST("/register", h.Auth.Register)
+		auth.POST("/login", h.Auth.Login)
 	}
 
+	// users — public reads, admin write (no JWT required)
+	g.POST("/users", h.User.CreateUser)
+	g.GET("/users", h.User.GetUsers)
+
+	// protected write routes
+	protected := g.Group("/", middleware.RequireAuth(authService))
+	{
+		protected.GET("/books", h.Book.GetBooks)
+		protected.GET("/books/:id", h.Book.GetBook)
+		protected.POST("/books", h.Book.CreateBook)
+
+		protected.GET("/authors", h.Author.GetAuthors)
+		protected.GET("/authors/:id", h.Author.GetAuthor)
+		protected.POST("/authors", h.Author.CreateAuthor)
+	}
 }
 
 func registerWebRoutes(r *gin.Engine, h *Handlers) {
