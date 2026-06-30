@@ -15,6 +15,7 @@ type Handlers struct {
 	User        *api.UserHandler
 	Book        *api.BookHandler
 	Author      *api.AuthorHandler
+	Review      *api.ReviewHandler
 
 	Web *web.WebHandler
 }
@@ -37,6 +38,12 @@ func NewHandlers(db *gorm.DB, jwtSecret string) *Handlers {
 		Author: api.NewAuthorHandler(
 			service.NewAuthorService(
 				repository.NewAuthorRepository(db),
+			),
+		),
+
+		Review: api.NewReviewHandler(
+			service.NewReviewService(
+				repository.NewReviewRepository(db),
 			),
 		),
 

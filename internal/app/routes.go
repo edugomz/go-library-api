@@ -27,6 +27,8 @@ func registerAPIroutes(r *gin.Engine, h *Handlers, authService *service.AuthServ
 		protected.GET("/books", h.Book.GetBooks)
 		protected.GET("/books/:id", h.Book.GetBook)
 		protected.POST("/books", h.Book.CreateBook)
+		protected.GET("/books/:id/reviews", h.Review.GetReviews)
+		protected.POST("/books/:id/reviews", h.Review.CreateReview)
 
 		protected.GET("/authors", h.Author.GetAuthors)
 		protected.GET("/authors/:id", h.Author.GetAuthor)
