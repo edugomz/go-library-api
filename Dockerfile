@@ -32,6 +32,9 @@ RUN apk add --no-cache ca-certificates
 # Copy binary from builder
 COPY --from=builder /app/server .
 
+# Copy HTML templates
+COPY --from=builder /app/internal/views ./internal/views
+
 # Copy .env if you want local container config (optional)
 # COPY .env .
 
