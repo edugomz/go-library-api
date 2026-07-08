@@ -17,7 +17,10 @@ RUN go mod download
 COPY . .
 
 # Build binary (static, production-ready)
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server ./cmd/api
+ARG VERSION=dev
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+    -ldflags "-X library-api/internal/version.Version=${VERSION}" \
+    -o server ./cmd/api
 
 # =========================
 # 2. Runtime stage
