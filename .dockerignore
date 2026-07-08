@@ -1,0 +1,26 @@
+# Secrets / local config
+.env
+.env.*
+
+# VCS
+.git
+.gitignore
+
+# Docs / non-runtime files
+README.md
+roadmap.md
+*.md
+
+# Compose files (not needed inside the image)
+docker-compose*.yml
+
+# Build artifacts / test output
+*.test
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+
+# Editor/IDE
+.idea/
+.vscode/
