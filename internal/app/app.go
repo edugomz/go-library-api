@@ -20,11 +20,13 @@ type Application struct {
 func NewApplication() *Application {
 	cfg, err := config.Load()
 	if err != nil {
-		logger.Log.Error("failed load config", "error", err)
+		logger.Log.Error("failed to load config", "error", err)
+		return nil
 	}
 
 	if err := db.Connect(cfg.DSN()); err != nil {
 		logger.Log.Error("failed to connect to db", "error", err)
+		return nil
 	}
 
 	handlers := NewHandlers(db.DB, cfg.JWTSecret)
