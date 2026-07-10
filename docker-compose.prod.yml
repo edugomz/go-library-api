@@ -8,3 +8,13 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    command: ["./server", "--migrate-only"]
+    profiles:
+      - migrate

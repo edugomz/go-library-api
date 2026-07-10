@@ -130,3 +130,10 @@ go run ./cmd/api --migrate-only
 
 In production this should run as a single one-off job (e.g. a Cloud Run Job) before the new revision receives traffic, not as part of every instance's boot.
 The same container image works for this: override its command with `./server --migrate-only` instead of building a separate image.
+
+When deploying with `docker-compose.prod.yml`, run the profile-gated `migrate` service once before `up`:
+
+```bash
+docker-compose -f docker-compose.prod.yml --profile migrate run --rm migrate
+docker-compose -f docker-compose.prod.yml up -d
+```
