@@ -107,7 +107,26 @@ docker-compose up -d
 # Install dependencies
 go mod tidy
 
+# Run database migrations (one-off, run once per schema change)
+go run ./cmd/api --migrate-only
+# or: make migrate
+
 #Run the application
 go run ./cmd/api/main.go
 
 ```
+
+### Migrations
+
+Migrations no longer run automatically when the server boots.
+On platforms like Cloud Run, a normal deploy or scale-up can start several instances at once, and concurrent `AutoMigrate` calls against the same database can race.
+
+Instead, run migrations as an explicit, separate step before starting (or updating) the server:
+
+```bash
+go run ./cmd/api --migrate-only
+# or: make migrate
+```
+
+In production this should run as a single one-off job (e.g. a Cloud Run Job) before the new revision receives traffic, not as part of every instance's boot.
+The same container image works for this: override its command with `./server --migrate-only` instead of building a separate image.
