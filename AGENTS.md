@@ -81,6 +81,10 @@ migrations/              GORM AutoMigrate; run explicitly via `go run ./cmd/api 
 - `internal/service/*_test.go` — unit tests with in-memory mock repositories (no DB needed)
 - `internal/repository/*_test.go` — integration tests that connect to a real PostgreSQL instance on port `5433` (started via `docker-compose.test.yml`)
 
+## CI
+
+`.github/workflows/test.yml` runs on every PR and on push to `main`: spins up `docker-compose.test.yml`'s `db-test` service, then runs `go build ./...` and `make test`.
+
 ## Adding a new resource
 
 Follow the pattern established by User/Book/Author:
