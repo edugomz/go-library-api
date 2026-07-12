@@ -10,10 +10,10 @@ import (
 )
 
 type Application struct {
-	DB *gorm.DB
+	DB       *gorm.DB
 	Handlers *Handlers
-	r *gin.Engine
-	cfg *config.Config
+	r        *gin.Engine
+	cfg      *config.Config
 }
 
 // reads config
@@ -43,10 +43,10 @@ func NewApplication() *Application {
 	registerWebRoutes(r, handlers)
 
 	return &Application{
-		DB: db.DB,
+		DB:       db.DB,
 		Handlers: handlers,
-		r: r,
-		cfg: cfg,
+		r:        r,
+		cfg:      cfg,
 	}
 }
 
@@ -55,4 +55,3 @@ func (a *Application) Run() {
 		logger.Log.Error("failed to run server", "error", err)
 	}
 }
-
