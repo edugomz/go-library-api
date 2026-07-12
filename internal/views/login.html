@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Library</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+    {{template "nav" .}}
+    <main class="narrow">
+        <h1>Login</h1>
+        <div id="login-error" class="error">{{.error}}</div>
+        <form method="post" action="/login" hx-post="/login" hx-target="#login-error" hx-swap="innerHTML">
+            <label>Email
+                <input type="email" name="email" required>
+            </label>
+            <label>Password
+                <input type="password" name="password" required>
+            </label>
+            <button type="submit">Login</button>
+        </form>
+        <p>No account? <a href="/register">Register</a></p>
+    </main>
+</body>
+</html>

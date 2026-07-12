@@ -96,6 +96,15 @@ Follow the pattern established by User/Book/Author:
 6. Register routes in `internal/app/routes.go`
 7. Add model to `migrations/migrate.go` AutoMigrate call
 
+## Web frontend
+
+Server-rendered `html/template` pages (Gin `LoadHTMLGlob`) + htmx (CDN `<script>` tag, no build step). See `ui-roadmap.md` for what's built and what's deferred.
+
+- `internal/views/nav.html` defines a shared `{{define "nav"}}` partial included via `{{template "nav" .}}` at the top of every page's `<body>`; pass `"LoggedIn": h.isLoggedIn(c)` in the template data for it to render correctly.
+- `static/` holds the one stylesheet, served via `r.Static("/static", "./static")` in `app.go`.
+- Web routes (`internal/handlers/web`) call `service` packages directly, the same way the API handlers do, they don't go through `/api/v1/*` over HTTP and aren't behind `middleware.RequireAuth`.
+- Login/register set/clear an `HttpOnly` JWT cookie (`token`) directly from `AuthService`; no web route currently enforces it, it only toggles nav display. See the auth tradeoff note in `ui-roadmap.md` before changing this.
+
 ## Maintaining this file
 
 Keep this file for knowledge useful to almost every future agent session in this project.

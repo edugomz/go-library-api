@@ -23,6 +23,8 @@ type Handlers struct {
 func NewHandlers(db *gorm.DB, jwtSecret string) *Handlers {
 	userRepo := repository.NewUserRepository(db)
 	authService := service.NewAuthService(userRepo, jwtSecret)
+	bookService := service.NewBookService(repository.NewBookRepository(db))
+	authorService := service.NewAuthorService(repository.NewAuthorRepository(db))
 
 	return &Handlers{
 		Auth:        api.NewAuthHandler(authService),
@@ -30,16 +32,8 @@ func NewHandlers(db *gorm.DB, jwtSecret string) *Handlers {
 		User: api.NewUserHandler(
 			service.NewUserService(userRepo),
 		),
-		Book: api.NewBookHandler(
-			service.NewBookService(
-				repository.NewBookRepository(db),
-			),
-		),
-		Author: api.NewAuthorHandler(
-			service.NewAuthorService(
-				repository.NewAuthorRepository(db),
-			),
-		),
+		Book:   api.NewBookHandler(bookService),
+		Author: api.NewAuthorHandler(authorService),
 
 		Review: api.NewReviewHandler(
 			service.NewReviewService(
@@ -47,10 +41,6 @@ func NewHandlers(db *gorm.DB, jwtSecret string) *Handlers {
 			),
 		),
 
-		Web: web.NewWebHandler(
-			service.NewBookService(
-				repository.NewBookRepository(db),
-			),
-		),
+		Web: web.NewWebHandler(bookService, authorService, authService),
 	}
 }

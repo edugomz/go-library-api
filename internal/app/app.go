@@ -33,6 +33,7 @@ func NewApplication() *Application {
 
 	r := gin.Default()
 	r.LoadHTMLGlob("internal/views/*")
+	r.Static("/static", "./static")
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})

@@ -37,5 +37,15 @@ func registerAPIroutes(r *gin.Engine, h *Handlers, authService *service.AuthServ
 }
 
 func registerWebRoutes(r *gin.Engine, h *Handlers) {
-	r.GET("/", h.Web.Home)
+	r.GET("/", h.Web.Books)
+	r.GET("/books", h.Web.Books)
+	r.GET("/books/:id", h.Web.BookDetail)
+	r.GET("/authors", h.Web.Authors)
+	r.GET("/authors/:id", h.Web.AuthorDetail)
+
+	r.GET("/login", h.Web.LoginPage)
+	r.POST("/login", h.Web.Login)
+	r.GET("/register", h.Web.RegisterPage)
+	r.POST("/register", h.Web.Register)
+	r.POST("/logout", h.Web.Logout)
 }
