@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"library-api/internal/logger"
 	"library-api/internal/models"
 	"library-api/internal/service"
 )
@@ -147,7 +148,8 @@ func (h *WebHandler) Register(c *gin.Context) {
 	password := c.PostForm("password")
 
 	if err := h.authService.Register(name, email, password); err != nil {
-		h.registerError(c, http.StatusConflict, "Could not register: "+err.Error())
+		logger.Log.Error("registration failed", "error", err)
+		h.registerError(c, http.StatusConflict, "Could not register: email may already be in use.")
 		return
 	}
 
