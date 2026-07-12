@@ -7,7 +7,7 @@ import (
 )
 
 // The server must never run migrations on a normal boot (Cloud Run can start
-// several instances concurrently, and concurrent AutoMigrate calls race).
+// several instances concurrently, and concurrent migration runs race).
 // Migrations are only run via the explicit --migrate-only flag, so the flag
 // must stay documented and wired into the entrypoint.
 func TestMigrateOnlyFlagRegistered(t *testing.T) {
