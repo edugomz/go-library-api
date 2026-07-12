@@ -43,6 +43,7 @@ The goal is to simulate how production Go services are structured without introd
 * Reading lists per user
 * Relational integrity via foreign keys
 * JWT authentication (register, login, Bearer token validation)
+* Server-rendered web UI (book/author browsing, login/register forms) - see `ui-roadmap.md`
 * Structured application bootstrap
 * Environment-based configuration
 * Container-ready deployment (Docker)

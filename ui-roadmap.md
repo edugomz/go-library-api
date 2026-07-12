@@ -24,7 +24,7 @@ Extends the existing `internal/handlers/web` / `internal/views` pattern.
 The JWT is stored in an `HttpOnly` cookie (`token`), set directly by the web handler after calling `AuthService.Login`, not by round-tripping through `/api/v1/auth/login` from client JS.
 
 * Chosen because: no XSS-exposed token in `localStorage`, and it reuses the same server-rendered form-post pattern already used elsewhere in this codebase (no client-side JS needed beyond htmx).
-* Tradeoff: the cookie is not marked `Secure` yet (dev runs over plain HTTP), and there's no CSRF protection on the state-changing web routes (`/login`, `/register`, `/logout`). Also, the cookie is only used to toggle nav display (`isLoggedIn`); no web route actually checks/requires it yet, since `internal/handlers/web` calls services directly and bypasses the JWT-protected `/api/v1/*` routes entirely, matching the existing `Home` pattern.
+* Tradeoff: the cookie is not marked `Secure` yet (dev runs over plain HTTP), and there's no CSRF protection on the state-changing web routes (`/login`, `/register`, `/logout`). Also, the cookie is only used to toggle nav display (`isLoggedIn`); no web route actually checks/requires it yet, since `internal/handlers/web` calls services directly and bypasses the JWT-protected `/api/v1/*` routes entirely.
 * Revisit before any of this ships behind a real domain: add `Secure`, add CSRF tokens on mutating forms, and decide whether web routes should actually enforce login.
 
 ---
