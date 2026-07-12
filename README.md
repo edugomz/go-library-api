@@ -89,7 +89,7 @@ Relationships are fully normalized and enforced at the database level using fore
 * [ ] Replace AutoMigrate with versioned migrations
 * [x] Add authentication (JWT-based)
 * [ ] Introduce caching layer (Redis)
-* [ ] Add integration + unit test suite
+* [x] Add integration + unit test suite
 * [ ] Add API pagination and filtering
 * [ ] Deploy to Cloud Run (GCP)
 * [ ] Add observability (logging, metrics)

@@ -1,57 +1,66 @@
 package repository
 
 import (
-	"library-api/internal/models"
+	"fmt"
 	"testing"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"library-api/internal/models"
 )
 
 func TestCreateUser(t *testing.T) {
+	db := setupTestDB(t)
+	repo := NewUserRepository(db)
 
-    dsn := "host=localhost user=postgres password=postgres dbname=library_test port=5433 sslmode=disable"
+	user := &models.User{
+		Name:  "John",
+		Email: fmt.Sprintf("john-%d@test.com", uniqueSuffix()),
+	}
 
-    db, err := gorm.Open(
-        postgres.Open(dsn),
-        &gorm.Config{},
-    )
+	err := repo.Create(user)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-    if err != nil {
-        t.Fatal(err)
-    }
+	if user.ID == 0 {
+		t.Fatal("expected created user to have an ID")
+	}
 
-		// refactor
-		if err := db.AutoMigrate(
-			&models.User{},
-			&models.Author{},
-			&models.Book{},
-			&models.Review{},
-			&models.ReadingList{},
-		); err != nil {
-			t.Fatal("migration failed:", err)
-		}
+	users, err := repo.GetAll()
+	if err != nil {
+		t.Fatal(err)
+	}
 
-    repo := NewUserRepository(db)
+	if len(users) == 0 {
+		t.Fatal("expected users")
+	}
+}
 
-    user := &models.User{
-        Name: "John",
-        Email: "john@test.com",
-    }
+func TestUserRepository_FindByEmail(t *testing.T) {
+	db := setupTestDB(t)
+	repo := NewUserRepository(db)
 
-    err = repo.Create(user)
+	email := fmt.Sprintf("jane-%d@test.com", uniqueSuffix())
+	user := &models.User{Name: "Jane", Email: email}
+	if err := repo.Create(user); err != nil {
+		t.Fatal(err)
+	}
 
-    if err != nil {
-        t.Fatal(err)
-    }
+	found, err := repo.FindByEmail(email)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-    users, err := repo.GetAll()
+	if found.ID != user.ID {
+		t.Fatalf("expected user ID %d, got %d", user.ID, found.ID)
+	}
+}
 
-    if err != nil {
-        t.Fatal(err)
-    }
+func TestUserRepository_FindByEmail_NotFound(t *testing.T) {
+	db := setupTestDB(t)
+	repo := NewUserRepository(db)
 
-    if len(users) == 0 {
-        t.Fatal("expected users")
-    }
+	_, err := repo.FindByEmail(fmt.Sprintf("missing-%d@test.com", uniqueSuffix()))
+	if err == nil {
+		t.Fatal("expected error for missing user")
+	}
 }

@@ -77,9 +77,10 @@ migrations/              GORM AutoMigrate; run explicitly via `go run ./cmd/api 
 
 **Key design decision:** repository interfaces are defined in the `service` package (not `repository`), so services depend only on abstractions. This is why unit tests for services use in-package mocks without importing the repository package.
 
-**Two test strategies in use:**
+**Three test strategies in use:**
 - `internal/service/*_test.go` — unit tests with in-memory mock repositories (no DB needed)
-- `internal/repository/*_test.go` — integration tests that connect to a real PostgreSQL instance on port `5433` (started via `docker-compose.test.yml`)
+- `internal/repository/*_test.go` — integration tests that connect to a real PostgreSQL instance on port `5433` (started via `docker-compose.test.yml`); share DB setup via `setupTestDB(t)` in `testdb_test.go` (the DB isn't truncated between runs, so tests use unique values via `uniqueSuffix()` rather than asserting exact row counts)
+- `internal/handlers/api/*_test.go` and `internal/middleware/auth_test.go` — HTTP-layer tests using `httptest` + a real `gin.Engine`; handlers are exercised with in-package mocks of the `service` package's exported repository interfaces (e.g. `service.AuthorRepository`), not a mocked service layer
 
 ## CI
 
