@@ -132,7 +132,7 @@ func (h *WebHandler) Login(c *gin.Context) {
 
 func (h *WebHandler) loginError(c *gin.Context, status int, msg string) {
 	if c.GetHeader("HX-Request") == "true" {
-		c.String(status, msg)
+		c.String(http.StatusOK, msg)
 		return
 	}
 	c.HTML(status, "login.html", gin.H{"error": msg, "LoggedIn": h.isLoggedIn(c)})
@@ -158,7 +158,7 @@ func (h *WebHandler) Register(c *gin.Context) {
 
 func (h *WebHandler) registerError(c *gin.Context, status int, msg string) {
 	if c.GetHeader("HX-Request") == "true" {
-		c.String(status, msg)
+		c.String(http.StatusOK, msg)
 		return
 	}
 	c.HTML(status, "register.html", gin.H{"error": msg, "LoggedIn": h.isLoggedIn(c)})
