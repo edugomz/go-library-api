@@ -86,7 +86,7 @@ Relationships are fully normalized and enforced at the database level using fore
 
 ## 🚀 Roadmap
 
-* [ ] Replace AutoMigrate with versioned migrations
+* [x] Replace AutoMigrate with versioned migrations
 * [x] Add authentication (JWT-based)
 * [ ] Introduce caching layer (Redis)
 * [x] Add integration + unit test suite
@@ -119,7 +119,7 @@ go run ./cmd/api/main.go
 ### Migrations
 
 Migrations no longer run automatically when the server boots.
-On platforms like Cloud Run, a normal deploy or scale-up can start several instances at once, and concurrent `AutoMigrate` calls against the same database can race.
+On platforms like Cloud Run, a normal deploy or scale-up can start several instances at once, and concurrent migration runs against the same database can race.
 
 Instead, run migrations as an explicit, separate step before starting (or updating) the server:
 

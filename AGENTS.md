@@ -72,7 +72,7 @@ internal/service/        Business logic; defines repository interfaces (not the 
 internal/handlers/api/   Gin HTTP handlers for REST endpoints (auth, user, book, author)
 internal/middleware/      Gin middleware; auth.go validates Bearer JWT and sets userID in context
 internal/handlers/web/   Gin handler for HTML views (internal/views/*.html)
-migrations/              GORM AutoMigrate; run explicitly via `go run ./cmd/api --migrate-only`, not on server boot
+migrations/              Versioned SQL migrations (golang-migrate); run explicitly via `go run ./cmd/api --migrate-only`, not on server boot
 ```
 
 **Key design decision:** repository interfaces are defined in the `service` package (not `repository`), so services depend only on abstractions. This is why unit tests for services use in-package mocks without importing the repository package.
@@ -95,7 +95,7 @@ Follow the pattern established by User/Book/Author:
 4. Add handler in `internal/handlers/api/`
 5. Wire handler in `internal/app/handler.go` → `NewHandlers()`
 6. Register routes in `internal/app/routes.go`
-7. Add model to `migrations/migrate.go` AutoMigrate call
+7. Add a new numbered up/down SQL migration pair under `migrations/sql/` (e.g. `000002_add_x.up.sql` / `.down.sql`)
 
 ## Maintaining this file
 
