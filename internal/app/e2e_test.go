@@ -30,13 +30,22 @@ func setupE2EServer(t *testing.T) *httptest.Server {
 		t.Fatal(err)
 	}
 
-	if err := db.AutoMigrate(
-		&models.User{},
-		&models.Author{},
-		&models.Book{},
-		&models.Review{},
-		&models.ReadingList{},
-	); err != nil {
+	// migrateLockKey serializes AutoMigrate against internal/repository's test
+	// setup, which migrates the same shared DB from a concurrently running
+	// test binary; must match the key used there.
+	const migrateLockKey = 918273645
+	if err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Exec("SELECT pg_advisory_xact_lock(?)", migrateLockKey).Error; err != nil {
+			return err
+		}
+		return tx.AutoMigrate(
+			&models.User{},
+			&models.Author{},
+			&models.Book{},
+			&models.Review{},
+			&models.ReadingList{},
+		)
+	}); err != nil {
 		t.Fatal("migration failed:", err)
 	}
 

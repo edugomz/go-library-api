@@ -13,6 +13,12 @@ import (
 
 var uniqueCounter int64
 
+// migrateLockKey serializes AutoMigrate across concurrently running test
+// binaries (this package and internal/app's e2e tests both migrate the same
+// shared DB, and go test ./... runs separate packages' binaries in
+// parallel). Must match the key used in internal/app/e2e_test.go.
+const migrateLockKey = 918273645
+
 // uniqueSuffix returns a value unique within this test run, used to build
 // unique emails/names since the test DB isn't truncated between runs.
 func uniqueSuffix() int64 {
@@ -33,13 +39,18 @@ func setupTestDB(t *testing.T) *gorm.DB {
 		t.Fatal(err)
 	}
 
-	if err := db.AutoMigrate(
-		&models.User{},
-		&models.Author{},
-		&models.Book{},
-		&models.Review{},
-		&models.ReadingList{},
-	); err != nil {
+	if err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Exec("SELECT pg_advisory_xact_lock(?)", migrateLockKey).Error; err != nil {
+			return err
+		}
+		return tx.AutoMigrate(
+			&models.User{},
+			&models.Author{},
+			&models.Book{},
+			&models.Review{},
+			&models.ReadingList{},
+		)
+	}); err != nil {
 		t.Fatal("migration failed:", err)
 	}
 
