@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Library</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+    {{template "nav" .}}
+    <main class="narrow">
+        <h1>Register</h1>
+        <div id="register-error" class="error">{{.error}}</div>
+        <form method="post" action="/register" hx-post="/register" hx-target="#register-error" hx-swap="innerHTML">
+            <label>Name
+                <input type="text" name="name" required>
+            </label>
+            <label>Email
+                <input type="email" name="email" required>
+            </label>
+            <label>Password
+                <input type="password" name="password" required minlength="8">
+            </label>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="/login">Login</a></p>
+    </main>
+</body>
+</html>

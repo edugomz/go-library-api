@@ -36,6 +36,9 @@ COPY --from=builder /app/server .
 # Copy HTML templates
 COPY --from=builder /app/internal/views ./internal/views
 
+# Copy static assets (CSS, etc.)
+COPY --from=builder /app/static ./static
+
 RUN chown -R app:app /app
 USER app
 

@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Books - Library</title>
+    <title>{{.author.Name}} - Library</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
     {{template "nav" .}}
     <main>
-        <h1>Books</h1>
+        <p><a href="/authors">&larr; Back to authors</a></p>
+        <h1>{{.author.Name}}</h1>
+        <h2>Books</h2>
         <ul class="list">
         {{range .books}}
             <li><a href="/books/{{.ID}}">{{.Title}}</a></li>
         {{else}}
-            <li>No books found.</li>
+            <li>No books by this author yet.</li>
         {{end}}
         </ul>
     </main>

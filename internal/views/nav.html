@@ -1,0 +1,16 @@
+{{define "nav"}}
+<nav class="nav">
+    <a href="/books" class="brand">Library</a>
+    <a href="/books">Books</a>
+    <a href="/authors">Authors</a>
+    <span class="nav-spacer"></span>
+    {{if .LoggedIn}}
+        <form method="post" action="/logout" style="display:inline">
+            <button type="submit" class="link-button">Logout</button>
+        </form>
+    {{else}}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    {{end}}
+</nav>
+{{end}}
